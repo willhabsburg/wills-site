@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block blog %}
+    <h5><strong>Blog</strong></h5>
+{% endblock %}
+
+{% block content %}
+        
+    <nav id="top-nav">
+        <ul>
+            <li><a href="{% url "blog:home" %}">Home</a></li>
+            <li><a href="{% url "blog:about" %}">About</a></li>
+            <li><a href="{% url "blog:post-list" %}">Posts</a></li>
+            <li><a href="{% url "blog:topic-list" %}">Topics</a></li>
+            <li><a href="{% url "blog:photocontest" %}">Photo Contest!</a></li>
+            <li><a href="{% url "blog:contact" %}">Contact</a></li>
+            <li><a href="{% url "blog:create-post" %}">Create Post</a></li>
+        </ul>
+    </nav>
+
+    <main id="main-content">
+        <div>
+            {% block main %}
+            <!-- Content for the main block will be rendered here -->
+            {% endblock %}
+        </div>
+
+        <aside>
+            <h2 class="text-primary">Topics:</h2>
+            <ul>
+                {% for topic in all_topics %}
+                    <li><a href="{{ topic.get_absolute_url }}">{{ topic.name }} ({{ topic.blog_posts__count }})</a></li>
+                {% endfor %}
+            </ul>
+        </aside>
+
+    </main>
+{% endblock content %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block calendar %}
+    <h5><strong>Calendar</strong></h5>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1 class='calheader'>
+            <a href="{% url 'cal:home' %}{{ prevMonth }}">&lt; </a>
+            {{ title }}
+            <a href="{% url 'cal:home' %}{{ nextMonth }}"> &gt;</a>
+        </h1>
+        <a class='calheader' id='addcaleventlink' href="{% url 'cal:add-cal-event' %}">
+            <h3>Add Event</h3>
+        </a>
+    </div>
+    <table class="table table-light">
+        <thead class="table-dark">
+            <tr>
+                {% for day in daylist %}
+                    <th>{{day}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            {% for days in caldays %}
+                <td>{{days.day}}</td>
+                {% if days.count|divisibleby:7 %}
+                    </tr><tr>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock content %}
+    

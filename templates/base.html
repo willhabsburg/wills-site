@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Will's Place{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'blog/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+    <link rel="stylesheet" href="{% static 'cal/cal.css' %}" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <div>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}">{% block home %}Home{% endblock %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'blog:home' %}">{% block blog %}Blog{% endblock %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cal:home' %}">{% block calendar %}Calendar{% endblock %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'privacy' %}">{% block privacy %}Privacy{% endblock %}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="navbar-nav">
+                        {% if user.is_authenticated %}
+                            <span class="navbar-text">Logged in as {{user.username}} | </span>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout">Logout</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Login</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        {% if messages %}
+            <div class="django-messages">
+            {% for message in messages %}
+                <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
+        <main role="main" class="pb-3">
+            {% block content %}
+            <!-- Content for the main block will be rendered here -->
+            {% endblock %}
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 Will Habsburg - <a href="{% url 'privacy' %}">Privacy</a>
+        </div>
+    </footer>
+
+    {% block js %}
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'js/site.js' %}" asp-append-version="true"></script>
+        <script src="{% static 'blog/csrf.js' %}"></script>
+        <script src="{% static 'blog/comments.js' %}"></script>
+        <script src="{% static 'blog/likedislike.js' %}"></script>
+    {% endblock %}
+</body>
+</html>

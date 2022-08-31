@@ -1,0 +1,48 @@
+{# blog/templates/blog/post_detail.html #}
+{% extends "blog/base.html" %}
+{% block page_title %}{{ post.title }}{% endblock %}
+
+{% block main %}
+<article id="post-detail-article">
+  <h1>{{ post.title }}</h1>
+  <div>{% if post.banner %}
+    <img class='bannerimage' src="{{ post.banner.url }}" alt="Banner image">
+  {% endif %}</div>
+  <span class="published">Published <time>{{ post.published }}</time></span><br>
+  <span class="author">{{ post.author.get_full_name }}</span>
+  <span class="topic">
+    {% for topic in post.topics.all %}
+      <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a>&nbsp;&nbsp;
+    {% endfor %}
+  </span>
+  <section class="content">{{ post.content|safe|linebreaks }}</section>
+  
+  {% load static %}
+</article>
+
+
+<section class="comments">
+  {% if comments %}
+    <h3>Latest comments</h3>
+    {% for comment in comments %}
+      <div class="comment">
+        <span class="by-line">By {{ comment.name }} | <time>{{ comment.created }}</time></span>
+        {{ comment.text|linebreaks }}
+        <a id='like{{ comment.pk }}' class='like' href="/api/comments/{{ comment.pk }}/like/">
+        <img class='likedislike' src="{% static "blog/thumbsup.png" %}" /> {{ comment.likes }}</a>
+        &nbsp;&nbsp;&nbsp;
+        <a id='dislike{{ comment.pk }}' class='dislike' href="/api/comments/{{ comment.pk }}/dislike/">
+        <img class='likedislike' src="{% static "blog/thumbsdown.png" %}" /> {{ comment.dislikes }}</a>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {% if user.is_authenticated %}
+  <h3>Leave a comment</h3>
+    {% with form=comment_form %}
+      {% include "blog/comment_form.html" %}
+    {% endwith %}
+  {% endif %}
+</section>
+
+{% endblock %}
